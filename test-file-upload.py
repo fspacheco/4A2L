@@ -6,6 +6,8 @@ from werkzeug.utils import secure_filename
 
 from logging.config import dictConfig
 
+from parseaia import Project
+
 dictConfig({
     'version': 1,
     'formatters': {'default': {
@@ -42,6 +44,17 @@ def upload_file():
         app.logger.info('%s submitted succesfully', filename)
         save_filename = os.path.join(app.config['UPLOAD_PATH'], filename)
         uploaded_file.save(save_filename)
-        app.logger.debug('%s', uploaded_file.stream())
         app.logger.debug('%s saved', save_filename)
+        parse_aia_file(save_filename)
     return redirect(url_for('index'))
+
+def parse_aia_file(filename):
+    mp = Project(filename)
+    app.logger.info("Avaliando arquivo %s", filename)
+
+    # Check number of screens
+    if (len(mp.screens) == 1):
+        app.logger.info("OK  : Tem uma tela")
+    else:
+        app.logger.info("FAIL: Número de telas não é um")
+
