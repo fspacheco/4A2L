@@ -76,4 +76,5 @@ def parse_aia_file(filename, task_id=1):
         else:
             app.logger.info("FAIL: Número de telas não é um")
             return(':cross_mark:    Número de telas não é um :red_exclamation_mark:')
-
+    else:
+        return(':construction:    Não sei avaliar ainda')
