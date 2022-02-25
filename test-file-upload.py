@@ -58,19 +58,22 @@ def upload_file():
         save_filename = os.path.join(app.config['UPLOAD_PATH'], filename)
         uploaded_file.save(save_filename)
         app.logger.debug('%s saved', save_filename)
-        output_parser=parse_aia_file(save_filename)
+        task_id = int(request.form['task'])
+        app.logger.debug('task id: %d', task_id)
+        output_parser=parse_aia_file(filename=save_filename, task_id=task_id)
         return render_template('output.html', msg=output_parser)
     return redirect(url_for('index'))
 
-def parse_aia_file(filename):
+def parse_aia_file(filename, task_id=1):
     mp = Project(filename)
     app.logger.info("Avaliando arquivo %s", filename)
 
-    # Check number of screens
-    if (len(mp.screens) == 1):
-        app.logger.info("OK  : Tem uma tela")
-        return(':check_mark_button:    Tem uma tela')
-    else:
-        app.logger.info("FAIL: Número de telas não é um")
-        return(':cross_mark:    Número de telas não é um :red_exclamation_mark:')
+    if task_id == 1:
+        # Check number of screens
+        if (len(mp.screens) == 1):
+            app.logger.info("OK  : Tem uma tela")
+            return(':check_mark_button:    Tem uma tela')
+        else:
+            app.logger.info("FAIL: Número de telas não é um")
+            return(':cross_mark:    Número de telas não é um :red_exclamation_mark:')
 

@@ -38,3 +38,8 @@ form {
     width: 400px;
     background-color: white;
 }
+
+#tasks {
+    margin: 0 auto;
+    padding: 20px;    
+}
