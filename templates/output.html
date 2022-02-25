@@ -1,10 +1,12 @@
 {% extends 'base.html' %}
 
 {% block head %}
-  <title>Assessment Results</title>
+  <title>Resultado da Avaliação</title>
 {% endblock %}
 
 {% block body %}
-  <h1>Assessment Results</h1>
-  <p>{{msg|emojify}}</p>
+  <h1>Resultado da Avaliação</h1>
+  <div id="content">
+    <p>{{msg|emojify}}</p>
+  </div>
 {% endblock %}

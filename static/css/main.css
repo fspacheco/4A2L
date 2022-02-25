@@ -4,6 +4,10 @@ body {
     background-color: lightblue;
 }
 
+h1 {
+    text-align: center;
+}
+
 table, th, td {
     border: 1px solid #aaa;
 }
@@ -28,7 +32,9 @@ form {
     margin-top: 20px;
 }
 
-.content {
+#content {
     margin: 0 auto;
+    padding: 20px;
     width: 400px;
+    background-color: white;
 }

@@ -1,13 +1,15 @@
 {% extends 'base.html' %}
 
 {% block head %}
-  <title>File Upload</title>
+  <title>Avaliação automática</title>
 {% endblock %}
 
 {% block body %}
-  <h1>File Upload</h1>
-  <form method="POST" action="" enctype="multipart/form-data">
-    <p><input type="file" name="file" accept=".aia"></p>
-    <p><input type="submit" value="Submit"></p>
-  </form>
+  <h1>Avaliação automática</h1>
+  <div id="content">
+    <form method="POST" action="" enctype="multipart/form-data">
+      <p><input type="file" name="file" accept=".aia"></p>
+      <p><input type="submit" value="Submit"></p>
+    </form>
+  </div>
 {% endblock %}
