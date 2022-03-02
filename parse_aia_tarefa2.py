@@ -54,7 +54,25 @@ for comp in mp.screens[0].UI.Properties.Components:
         ok = True
 if (ok == False):
     print("FAIL: Tela não tem um objeto de áudio (som)")
-    
+
+#Check if audio file is incorporated in the .aia
+ok = False
+for audio in mp.audio:
+    if (audio.samples > 0):
+        print("OK  : Tem um arquivo de áudio (som) incorporado")
+        # TODO: Formato? Está ligado ao objeto?
+        ok = True
+if (ok == False):
+    print("FAIL: Não tem um arquivo de áudio (som) incorporado")
+
+# Check if app has an icon
+# TODO: está procurando só na screen[0]. É suficiente?
+try:
+    if mp.screens[0].UI.Properties.Icon:
+        print("OK  : App tem um ícone")
+except:
+    print("FAIL  : App não tem um ícone")
+
 # Check if button has click
 ok = False
 for block in mp.screens[0].Code.blocks:
@@ -63,15 +81,33 @@ for block in mp.screens[0].Code.blocks:
         ok = True
 if (ok == False):
     print("FAIL: Script não tem um botão com evento clique")
-    
+
+#Check if button is associated to an image
+ok = False
+for block in mp.screens[0].UI.Properties.Components:
+    if (block.Type == "Button" and block.Image != None):
+        print("OK  : Botão está associado a uma imagem")
+        ok = True
+if (ok == False):
+    print("FAIL: Botão está associado a uma imagem")
+
+#Check if app has a label
+ok = False
+for block in mp.screens[0].UI.Properties.Components:
+    if (block.Type == "Label" and block.Text != None):
+        print("OK  : App tem uma legenda (label)")
+        ok = True
+if (ok == False):
+    print("FAIL: App tem uma legenda (label)")
+
 # Check if sound has method play
-# TODO não está funcionando. Não é assim, tem que fazer via statement (acho)
-# TODO mp.screens[0].Code.blocks[0].statements[0].child.mutation.method_name
 ok = False
 for block in mp.screens[0].Code.blocks:
-    if (block.component_type == "Sound" and block.method_name == "Play"):
-        print("OK  : Script tem um som com método play")
-        ok = True
+    if block.type == "component_event":
+        for statement in block.statements:
+            if statement.child.mutation.component_type == "Sound" and statement.child.mutation.method_name == "Play":
+                print("OK  : Script tem um som com método play")
+                ok = True
 if (ok == False):
     print("FAIL: Script não tem um som com método play")
 
