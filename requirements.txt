@@ -5,7 +5,8 @@ gunicorn==20.1.0
 itsdangerous==2.1.0
 Jinja2==3.0.3
 MarkupSafe==2.1.0
-git@github.com:fspacheco/parseaia.git
+git+git://github.com/fspacheco/parseaia.git
 Pillow==9.0.1
+sox==1.4.1
 Werkzeug==2.0.3
 xmltodict==0.12.0
