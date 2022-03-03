@@ -1,6 +1,3 @@
-libsndfile1
-libsndfile-dev
-libpng-dev
 sox
-libsox-fmt-mp3
-ffmpeg
+libsox-fmt-all
+
