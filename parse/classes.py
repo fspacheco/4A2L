@@ -1,0 +1,3 @@
+class OutMsg:
+    success = []
+    fail = []

@@ -9,7 +9,8 @@ from werkzeug.utils import secure_filename
 
 from logging.config import dictConfig
 
-from parseaia import Project
+from parse.classes import OutMsg 
+from parse.parse_tarefas import parse_tarefa1
 
 import emoji
 
@@ -55,36 +56,26 @@ def upload_file():
         if file_ext not in app.config['UPLOAD_EXTENSIONS']:
             return "Invalid file format", 400        
         app.logger.info('%s submitted succesfully', filename)
+
         save_filename = os.path.join(app.config['UPLOAD_PATH'], filename)
         uploaded_file.save(save_filename)
         app.logger.debug('%s saved', save_filename)
+
         task_id = int(request.form['task'])
         app.logger.debug('task id: %d', task_id)
+
+        output_parser=OutMsg()
         output_parser=parse_aia_file(filename=save_filename, task_id=task_id)
-        return render_template('output.html', msg=output_parser)
+        app.logger.debug('success: %d, fail: %d', len(output_parser.success), len(output_parser.fail))
+        return render_template('output.html', output=output_parser)
     return redirect(url_for('index'))
 
 def parse_aia_file(filename, task_id=1):
-    mp = Project(filename)
-    app.logger.info("Avaliando arquivo %s", filename)
-
+    outmsg = OutMsg()
+    outmsg.success.clear()
+    outmsg.fail.clear()
     if task_id == 1:
-        # Check number of screens
-        if (len(mp.screens) == 1):
-            app.logger.info("OK  : Tem uma tela")
-            #return(':check_mark_button:    Tem uma tela')
-        else:
-            app.logger.info("FAIL: Número de telas não é um")
-            #return(':cross_mark:    Número de telas não é um :red_exclamation_mark:')
-        #Check if audio file is incorporated in the .aia
-        ok = False
-        for audio in mp.audio:
-            if (audio.samples > 0):
-                app.logger.info("OK  : Tem um arquivo de áudio (som) incorporado")
-                # TODO: Formato? Está ligado ao objeto?
-                ok = True
-        if (ok == False):
-            app.logger.info("FAIL: Não tem um arquivo de áudio (som) incorporado")
-        return('PASSED test ')
+        outmsg = parse_tarefa1(filename)
     else:
-        return(':construction:    Não sei avaliar ainda')
+        outmsg.fail.append(':construction:    Não sei avaliar ainda')
+    return outmsg
