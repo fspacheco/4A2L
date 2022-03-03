@@ -85,6 +85,6 @@ def parse_aia_file(filename, task_id=1):
                 ok = True
         if (ok == False):
             app.logger.info("FAIL: Não tem um arquivo de áudio (som) incorporado")
-        return('passed')
+        return('PASSED test')
     else:
         return(':construction:    Não sei avaliar ainda')
