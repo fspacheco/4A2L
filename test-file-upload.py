@@ -72,9 +72,19 @@ def parse_aia_file(filename, task_id=1):
         # Check number of screens
         if (len(mp.screens) == 1):
             app.logger.info("OK  : Tem uma tela")
-            return(':check_mark_button:    Tem uma tela')
+            #return(':check_mark_button:    Tem uma tela')
         else:
             app.logger.info("FAIL: Número de telas não é um")
-            return(':cross_mark:    Número de telas não é um :red_exclamation_mark:')
+            #return(':cross_mark:    Número de telas não é um :red_exclamation_mark:')
+        #Check if audio file is incorporated in the .aia
+        ok = False
+        for audio in mp.audio:
+            if (audio.samples > 0):
+                app.logger.info("OK  : Tem um arquivo de áudio (som) incorporado")
+                # TODO: Formato? Está ligado ao objeto?
+                ok = True
+        if (ok == False):
+            app.logger.info("FAIL: Não tem um arquivo de áudio (som) incorporado")
+        return('passed')
     else:
         return(':construction:    Não sei avaliar ainda')
