@@ -6,7 +6,14 @@
 
 {% block body %}
   <h1>Resultado da Avaliação</h1>
-  <div id="content">
-    <p>{{msg|emojify}}</p>
+  <div class="success">
+    {% for msg in output.success %}
+      <p>{{(':check_mark_button: '+msg)|emojify}}</p>
+    {% endfor %}
+  </div>
+  <div class="fail">
+    {% for msg in output.fail %}
+      <p>{{(':cross_mark: '+msg + ' :red_exclamation_mark:')|emojify}}</p>
+    {% endfor %}
   </div>
 {% endblock %}
