@@ -16,7 +16,7 @@ def parse_tarefa1(filename):
     logger.info("Tarefa 1: avaliando arquivo %s", filename)
 
     # Check number of screens
-    if (len(mp.screens) == 1):
+    if len(mp.screens) == 1:
         outmsg.success.append("Tem uma tela")
     else:
         outmsg.fail.append("Número de telas não é um")
@@ -24,19 +24,19 @@ def parse_tarefa1(filename):
     # Check if screen 1 has at least 1 button
     ok = False
     for comp in mp.screens[0].UI.Properties.Components:
-        if (comp.Type == "Button"):
+        if comp.Type == "Button":
             outmsg.success.append("Tela tem um botão")
             ok = True
-    if (ok == False):
+    if ok == False:
         outmsg.fail.append("Tela não tem um botão")
 
     # Check if screen 1 has at least 1 sound
     ok = False
     for comp in mp.screens[0].UI.Properties.Components:
-        if (comp.Type == "Sound"):
+        if comp.Type == "Sound":
             outmsg.success.append("Tela tem um objeto de áudio (som)")
             ok = True
-    if (ok == False):
+    if ok == False:
         outmsg.fail.append("Tela não tem um objeto de áudio (som)")
 
     #Check if audio file is incorporated in the .aia
@@ -46,7 +46,7 @@ def parse_tarefa1(filename):
             outmsg.success.append("Tem um arquivo de áudio (som) incorporado")
             # TODO: Formato? Está ligado ao objeto?
             ok = True
-    if (ok == False):
+    if ok == False:
         outmsg.fail.append("Não tem um arquivo de áudio (som) incorporado")
 
     # Check if app has an icon
@@ -55,15 +55,19 @@ def parse_tarefa1(filename):
         if mp.screens[0].UI.Properties.Icon:
             outmsg.success.append("App tem um ícone")
     except:
-        outmsg.fail.append("FAIL  : App não tem um ícone")
+        outmsg.fail.append("App não tem um ícone")
 
     # Check if button has click
     ok = False
     for block in mp.screens[0].Code.blocks:
-        if (block.component_type == "Button" and block.event_name == "Click"):
-            outmsg.success.append("Script tem um botão com evento clique")
-            ok = True
-    if (ok == False):
+        try:
+            if (block.component_type == "Button" and block.event_name == "Click"):
+                outmsg.success.append("Script tem um botão com evento clique")
+                ok = True
+                break
+        except AttributeError:
+            ok = False
+    if ok == False:
         outmsg.fail.append("Script não tem um botão com evento clique")
 
     #Check if button is associated to an image
@@ -72,7 +76,7 @@ def parse_tarefa1(filename):
         if (block.Type == "Button" and block.Image != None):
             outmsg.success.append("Botão está associado a uma imagem")
             ok = True
-    if (ok == False):
+    if ok == False:
         outmsg.fail.append("Botão está associado a uma imagem")
 
     #Check if app has a label
@@ -81,7 +85,7 @@ def parse_tarefa1(filename):
         if (block.Type == "Label" and block.Text != None):
             outmsg.success.append("App tem uma legenda (label)")
             ok = True
-    if (ok == False):
+    if ok == False:
         outmsg.fail.append("App tem uma legenda (label)")
 
     # Check if sound has method play
@@ -89,12 +93,17 @@ def parse_tarefa1(filename):
     for block in mp.screens[0].Code.blocks:
         if block.type == "component_event":
             for statement in block.statements:
-                if statement.child.mutation.component_type == "Sound" and statement.child.mutation.method_name == "Play":
-                    outmsg.success.append("Script tem um som com método play")
-                    ok = True
-    if (ok == False):
+                try:
+                    if statement.child.mutation.component_type == "Sound" and statement.child.mutation.method_name == "Play":
+                        outmsg.success.append("Script tem um som com método play")
+                        ok = True
+                        break
+                except AttributeError:
+                    ok = False
+    if ok == False:
         outmsg.fail.append("Script não tem um som com método play")
-    
+   
+
     return outmsg
 
 """   

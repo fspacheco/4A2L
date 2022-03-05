@@ -32,7 +32,7 @@ outmsg = parse_tarefa1(args.filename)
 
 print("SUCCESS")
 for msg in outmsg.success:
-    print("OK   : ", msg)
+    print("PASS : ", msg)
 
 print("ERROR")
 for msg in outmsg.fail:
