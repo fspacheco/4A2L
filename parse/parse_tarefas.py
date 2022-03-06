@@ -22,8 +22,9 @@ def parse_tarefa1(filename):
         outmsg.fail.append("Número de telas não é um")
 
     # Check if screen 1 has at least 1 button
+    # INFO: Screen1 is always the first screen
     ok = False
-    for comp in mp.screens[0].UI.Properties.Components:
+    for comp in mp.Screen1.UI.Properties.Components:
         if comp.Type == "Button":
             outmsg.success.append("Tela tem um botão")
             ok = True
@@ -32,7 +33,7 @@ def parse_tarefa1(filename):
 
     # Check if screen 1 has at least 1 sound
     ok = False
-    for comp in mp.screens[0].UI.Properties.Components:
+    for comp in mp.Screen1.UI.Properties.Components:
         if comp.Type == "Sound":
             outmsg.success.append("Tela tem um objeto de áudio (som)")
             ok = True
@@ -50,16 +51,16 @@ def parse_tarefa1(filename):
         outmsg.fail.append("Não tem um arquivo de áudio (som) incorporado")
 
     # Check if app has an icon
-    # TODO: está procurando só na screen[0]. É suficiente?
+    # INFO: If present, the icon is at Screen1
     try:
-        if mp.screens[0].UI.Properties.Icon:
+        if mp.Screen1.UI.Properties.Icon:
             outmsg.success.append("App tem um ícone")
     except:
         outmsg.fail.append("App não tem um ícone")
 
-    # Check if button has click
+    # Check if button at Screen1 has click
     ok = False
-    for block in mp.screens[0].Code.blocks:
+    for block in mp.Screen1.Code.blocks:
         try:
             if (block.component_type == "Button" and block.event_name == "Click"):
                 outmsg.success.append("Script tem um botão com evento clique")
@@ -70,27 +71,31 @@ def parse_tarefa1(filename):
     if ok == False:
         outmsg.fail.append("Script não tem um botão com evento clique")
 
-    #Check if button is associated to an image
+    #Check if button is associated to an image (at Screen1)
     ok = False
-    for block in mp.screens[0].UI.Properties.Components:
-        if (block.Type == "Button" and block.Image != None):
-            outmsg.success.append("Botão está associado a uma imagem")
-            ok = True
+    for block in mp.Screen1.UI.Properties.Components:
+        try:
+            if (block.Type == "Button" and block.Image != None):
+                outmsg.success.append("Botão está associado a uma imagem")
+                ok = True
+                break
+        except AttributeError:
+            ok = False
     if ok == False:
-        outmsg.fail.append("Botão está associado a uma imagem")
+        outmsg.fail.append("Botão não está associado a uma imagem")
 
-    #Check if app has a label
+    #Check if app has a label at Screen1
     ok = False
-    for block in mp.screens[0].UI.Properties.Components:
+    for block in mp.Screen1.UI.Properties.Components:
         if (block.Type == "Label" and block.Text != None):
             outmsg.success.append("App tem uma legenda (label)")
             ok = True
     if ok == False:
         outmsg.fail.append("App tem uma legenda (label)")
 
-    # Check if sound has method play
+    # Check if sound has method play at Screen1
     ok = False
-    for block in mp.screens[0].Code.blocks:
+    for block in mp.Screen1.Code.blocks:
         if block.type == "component_event":
             for statement in block.statements:
                 try:
