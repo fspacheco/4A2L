@@ -10,10 +10,11 @@
 import argparse
 import logging
 from parse.classes import OutMsg
-from parse.parse_tarefas import parse_tarefa1
+from parse.parse_tarefas import *
+
 
 cmparser = argparse.ArgumentParser(description='Verifica Tarefas para curso AppInventor.')
-cmparser.add_argument("-t", "--tarefa", dest="tarefaId", choices=['1', '2', '3', '4'], help="Id da tarefa a avaliar")
+cmparser.add_argument("-t", "--tarefa", dest="tarefaId", choices=['2', '3', '4'], help="Id da tarefa a avaliar")
 cmparser.add_argument("-f", "--file", dest="filename", help="Nome do arquivo. Default temporário: App_Oficina2_3.aia")
 cmparser.add_argument("-l", "--log", dest="logLevel", choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], help="Set the logging level")
 
@@ -28,7 +29,7 @@ if args.filename == None:
 
 outmsg = OutMsg()
 
-outmsg = parse_tarefa1(args.filename)
+outmsg = parse_tarefa2(args.filename)
 
 print("SUCCESS")
 for msg in outmsg.success:

@@ -43,3 +43,21 @@ form {
     margin: 0 auto;
     padding: 20px;    
 }
+
+img {
+  display: block;
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+footer {
+    font-family: sans-serif;
+    font-size: 75%;
+    width: 50%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: yellow;
+    text-align: center;
+}

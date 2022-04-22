@@ -16,4 +16,10 @@
       <p>{{(':cross_mark: '+msg + ' :red_exclamation_mark:')|emojify}}</p>
     {% endfor %}
   </div>
+  <div class="validation_code">
+    {% if output.fail %}
+        <p>Ainda tem erros. Confira seu código e tente novamente.</p>
+    {% else %}
+        <p>{{'Parabéns! A senha para avançar nas atividades do Moodle é ' + output.validation_code + '.'}}</p>
+    {% endif %}
 {% endblock %}
