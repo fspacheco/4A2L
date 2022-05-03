@@ -10,7 +10,7 @@ from werkzeug.utils import secure_filename
 from logging.config import dictConfig
 
 from parse.classes import OutMsg 
-from parse.parse_tarefas import parse_tarefa2
+from parse.parse_tarefas import *
 
 import emoji
 
@@ -76,6 +76,8 @@ def parse_aia_file(filename, task_id=2):
     outmsg.fail.clear()
     if task_id == 2:
         outmsg = parse_tarefa2(filename)
+    elif task_id == 3:
+        outmsg = parse_tarefa3(filename)
     else:
         outmsg.fail.append(':construction:    Não sei avaliar ainda')
     return outmsg
