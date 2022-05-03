@@ -10,8 +10,57 @@ from parse.classes import OutMsg
 
 logger = logging.getLogger(__name__)
 
+def check4Buttons(scr, outmsg):        
+    # Check if screen 2 has at least 4 buttons
+    ok = False
+    numButtons=0
+    nameButtons=""
+    if type(scr.UI.Properties.Components) is list:
+        complist = scr.UI.Properties.Components
+        for arrangement in complist:
+            try:
+                for comp in arrangement.Components:
+                    if comp.Type == "Button":
+                        numButtons = numButtons + 1
+                        nameButtons = nameButtons + " " + comp.Name
+            except:
+                continue
+    if numButtons>=4:
+        outmsg.success.append("Tela "+scr.UI.Properties.Name+" tem "+str(numButtons)+" botões: "+nameButtons)
+    else:
+        outmsg.fail.append("Tela "+scr.UI.Properties.Name+" tem "+str(numButtons)+" botão. Deveria ter, no mínimo, 4")
+
+def checkNotifiers(scr, outmsg):        
+    # Check if screen 2 has one notifier
+    ok = False
+    numNotifiers=0
+    if type(scr.UI.Properties.Components) is list:
+        complist = scr.UI.Properties.Components
+        try:
+            for comp in complist:
+                if comp.Type == "Notifier":
+                    numNotifiers = numNotifiers + 1
+        except:
+            ok=False
+    if numNotifiers == 2:
+        outmsg.success.append("Tela "+scr.UI.Properties.Name+" tem "+str(numNotifiers)+" notificador")
+    else:
+        outmsg.fail.append("Tela "+scr.UI.Properties.Name+" tem "+str(numNotifiers)+" notificador. Deveria ter, no mínimo, 2")
+        
+def check2Sounds(scr, outmsg):
+    # Check if screen 2 has at least 2 sounds
+    numAudioFiles=0
+    for comp in scr.UI.Properties.Components:
+        if comp.Type == "Sound":
+            numAudioFiles = numAudioFiles + 1
+    if numAudioFiles == 2:
+        outmsg.success.append("Tela "+scr.UI.Properties.Name+" tem 2 objetos de áudio (som)")
+    else:
+        outmsg.fail.append("Tela "+scr.UI.Properties.Name+" tem "+str(numAudioFiles)+" objetos de áudio (som). Deveria ter 2")
+        
 def parse_tarefa2(filename):
     outmsg = OutMsg()
+    #TODO: read validation_code from a file
     outmsg.validation_code = '112233'
     mp = Project(filename)
     logger.info("Tarefa 2: avaliando arquivo %s", filename)
@@ -196,51 +245,13 @@ def parse_tarefa3(filename):
     if ok == False:
         outmsg.fail.append("Tela 1 não tem um botão que fecha o aplicativo")        
 
-    # Check if screen 2 has at least 4 buttons
-    ok = False
-    numButtons=0
-    nameButtons=""
-    if type(mp.Screen2.UI.Properties.Components) is list:
-        complist = mp.Screen2.UI.Properties.Components
-        for arrangement in complist:
-            try:
-                for comp in arrangement.Components:
-                    if comp.Type == "Button":
-                        numButtons = numButtons + 1
-                        nameButtons = nameButtons + " " + comp.Name
-            except:
-                continue
-    if numButtons>=4:
-        outmsg.success.append("Tela 2 tem "+str(numButtons)+" botões: "+nameButtons)
-    else:
-        outmsg.fail.append("Tela 2 tem "+str(numButtons)+" botão. Deveria ter, no mínimo, 4")
-        
-    # Check if screen 2 has one notifier
-    ok = False
-    numNotifiers=0
-    if type(mp.Screen2.UI.Properties.Components) is list:
-        complist = mp.Screen2.UI.Properties.Components
-        try:
-            for comp in complist:
-                if comp.Type == "Notifier":
-                    numNotifiers = numNotifiers + 1
-        except:
-            ok=False
-
-    if numNotifiers == 1:
-        outmsg.success.append("Tela 2 tem "+str(numNotifiers)+" notificador")
-    else:
-        outmsg.fail.append("Tela 2 tem "+str(numNotifiers)+" notificador. Deveria ter, no mínimo, 1")
-
-    # Check if screen 2 has at least 2 sounds
-    numAudioFiles=0
-    for comp in mp.Screen2.UI.Properties.Components:
-        if comp.Type == "Sound":
-            numAudioFiles = numAudioFiles + 1
-    if numAudioFiles == 2:
-        outmsg.success.append("Tela 2 tem 2 objetos de áudio (som)")
-    else:
-        outmsg.fail.append("Tela 2 tem "+str(numAudioFiles)+" objetos de áudio (som). Deveria ter 2")        
+    #Check for screens
+    for scr in mp.screens:
+        if scr.UI.Properties.Name == "Screen1":
+            continue
+        check4Buttons(scr, outmsg)
+        checkNotifiers(scr, outmsg)
+        check2Sounds(scr, outmsg)
           
     return outmsg
 
