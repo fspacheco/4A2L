@@ -116,41 +116,6 @@ def parse_tarefa3(filename):
     mp = Project(filename)
     logger.info("Tarefa 3: avaliando arquivo %s", filename)
 
-    # Check number of screens
-    if len(mp.screens) == 1:
-        outmsg.success.append("Tem uma tela")
-    else:
-        outmsg.fail.append("Número de telas não é um")
-
-    # Check if screen 1 has at least 1 button
-    # INFO: Screen1 is always the first screen
-    ok = False
-    for comp in mp.Screen1.UI.Properties.Components:
-        if comp.Type == "Button":
-            outmsg.success.append("Tela tem um botão")
-            ok = True
-    if ok == False:
-        outmsg.fail.append("Tela não tem um botão")
-
-    # Check if screen 1 has at least 1 sound
-    ok = False
-    for comp in mp.Screen1.UI.Properties.Components:
-        if comp.Type == "Sound":
-            outmsg.success.append("Tela tem um objeto de áudio (som)")
-            ok = True
-    if ok == False:
-        outmsg.fail.append("Tela não tem um objeto de áudio (som)")
-
-    #Check if audio file is incorporated in the .aia
-    ok = False
-    for audio in mp.audio:
-        if (audio.samples > 0):
-            outmsg.success.append("Tem um arquivo de áudio (som) incorporado")
-            # TODO: Formato? Está ligado ao objeto?
-            ok = True
-    if ok == False:
-        outmsg.fail.append("Não tem um arquivo de áudio (som) incorporado")
-
     # Check if app has an icon
     # INFO: If present, the icon is at Screen1
     try:
@@ -159,56 +124,124 @@ def parse_tarefa3(filename):
     except:
         outmsg.fail.append("App não tem um ícone")
 
-    # Check if button at Screen1 has click
+    # Check number of screens
+    if len(mp.screens) >= 5:
+        outmsg.success.append("Tem "+str(len(mp.screens))+" telas")
+    else:
+        outmsg.fail.append("Tem "+str(len(mp.screens))+" telas. Deveria ter 5 ou mais")
+
+    # Check if screen 1 has at least 2 buttons
+    # INFO: Screen1 is always the first screen
+    ok = False
+    numButtons=0
+    if type(mp.Screen1.UI.Properties.Components) is list:
+        complist = mp.Screen1.UI.Properties.Components
+        for arrangement in complist:
+            for comp in arrangement.Components:
+                if comp.Type == "Button":
+                    numButtons = numButtons + 1
+    if numButtons>=2:
+        outmsg.success.append("Tela 1 tem "+str(numButtons)+" botões")
+    else:
+        outmsg.fail.append("Tela 1 tem "+str(numButtons)+" botão. Deveria ter, no mínimo, 2")
+
+    #Check if audio file is incorporated in the .aia
+    numAudioFiles=0
+    for audio in mp.audio:
+        numAudioFiles = numAudioFiles + 1
+    if (numAudioFiles >= 5):
+        outmsg.success.append("Tem "+str(numAudioFiles)+" arquivos de áudio (som) incorporados")
+    else:
+        outmsg.fail.append("Só tem "+str(numAudioFiles)+" arquivos de áudio. Deveria ter, no mínimo, 5")
+
+    # Check if Screen1 has 2 buttons with click
+    ok = False
+    numButtons = 0
+    for block in mp.Screen1.Code.blocks:
+        try:
+            if (block.component_type == "Button" and block.event_name == "Click"):
+                numButtons = numButtons + 1
+        except AttributeError:
+            ok = False
+    if numButtons >= 2:
+                outmsg.success.append("Os "+str(numButtons)+" botões da Tela 1 tem evento clique")
+    else:
+        outmsg.fail.append("Tela 1 não tem 2 botões com evento clique")
+
+    # Check if Screen1 / Button has action to open another screen
     ok = False
     for block in mp.Screen1.Code.blocks:
         try:
             if (block.component_type == "Button" and block.event_name == "Click"):
-                outmsg.success.append("Script tem um botão com evento clique")
-                ok = True
-                break
+                if block.statements[0].child.type == "controls_openAnotherScreen":
+                    outmsg.success.append("Tela 1 tem um botão que abre uma outra janela")
+                    ok=True
+                    break
         except AttributeError:
             ok = False
     if ok == False:
-        outmsg.fail.append("Script não tem um botão com evento clique")
+        outmsg.fail.append("Tela 1 não tem um botão que abre uma outra tela")
 
-    #Check if button is associated to an image (at Screen1)
-    ok = False
-    for block in mp.Screen1.UI.Properties.Components:
-        try:
-            if (block.Type == "Button" and block.Image != None):
-                outmsg.success.append("Botão está associado a uma imagem")
-                ok = True
-                break
-        except AttributeError:
-            ok = False
-    if ok == False:
-        outmsg.fail.append("Botão não está associado a uma imagem")
-
-    #Check if app has a label at Screen1
-    ok = False
-    for block in mp.Screen1.UI.Properties.Components:
-        if (block.Type == "Label" and block.Text != None):
-            outmsg.success.append("App tem uma legenda (label)")
-            ok = True
-    if ok == False:
-        outmsg.fail.append("App tem uma legenda (label)")
-
-    # Check if sound has method play at Screen1
+    # Check if Screen1 / Button has action to exit app
     ok = False
     for block in mp.Screen1.Code.blocks:
-        if block.type == "component_event":
-            for statement in block.statements:
-                try:
-                    if statement.child.mutation.component_type == "Sound" and statement.child.mutation.method_name == "Play":
-                        outmsg.success.append("Script tem um som com método play")
-                        ok = True
-                        break
-                except AttributeError:
-                    ok = False
+        try:
+            if (block.component_type == "Button" and block.event_name == "Click"):
+                if block.statements[0].child.type == "controls_closeApplication":
+                    outmsg.success.append("Tela 1 tem um botão que fecha o aplicativo")
+                    ok=True
+                    break
+        except AttributeError:
+            ok = False
     if ok == False:
-        outmsg.fail.append("Script não tem um som com método play")
-  
+        outmsg.fail.append("Tela 1 não tem um botão que fecha o aplicativo")        
+
+    # Check if screen 2 has at least 4 buttons
+    ok = False
+    numButtons=0
+    nameButtons=""
+    if type(mp.Screen2.UI.Properties.Components) is list:
+        complist = mp.Screen2.UI.Properties.Components
+        for arrangement in complist:
+            try:
+                for comp in arrangement.Components:
+                    if comp.Type == "Button":
+                        numButtons = numButtons + 1
+                        nameButtons = nameButtons + " " + comp.Name
+            except:
+                continue
+    if numButtons>=4:
+        outmsg.success.append("Tela 2 tem "+str(numButtons)+" botões: "+nameButtons)
+    else:
+        outmsg.fail.append("Tela 2 tem "+str(numButtons)+" botão. Deveria ter, no mínimo, 4")
+        
+    # Check if screen 2 has one notifier
+    ok = False
+    numNotifiers=0
+    if type(mp.Screen2.UI.Properties.Components) is list:
+        complist = mp.Screen2.UI.Properties.Components
+        try:
+            for comp in complist:
+                if comp.Type == "Notifier":
+                    numNotifiers = numNotifiers + 1
+        except:
+            ok=False
+
+    if numNotifiers == 1:
+        outmsg.success.append("Tela 2 tem "+str(numNotifiers)+" notificador")
+    else:
+        outmsg.fail.append("Tela 2 tem "+str(numNotifiers)+" notificador. Deveria ter, no mínimo, 1")
+
+    # Check if screen 2 has at least 2 sounds
+    numAudioFiles=0
+    for comp in mp.Screen2.UI.Properties.Components:
+        if comp.Type == "Sound":
+            numAudioFiles = numAudioFiles + 1
+    if numAudioFiles == 2:
+        outmsg.success.append("Tela 2 tem 2 objetos de áudio (som)")
+    else:
+        outmsg.fail.append("Tela 2 tem "+str(numAudioFiles)+" objetos de áudio (som). Deveria ter 2")        
+          
     return outmsg
 
 """   

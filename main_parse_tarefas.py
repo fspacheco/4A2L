@@ -29,8 +29,19 @@ if args.filename == None:
 
 outmsg = OutMsg()
 
-outmsg = parse_tarefa2(args.filename)
+if args.tarefaId != None:
+    args.tarefaId = int(args.tarefaId)
+    
+logger.debug("Tarefa ID: %s", args.tarefaId)
 
+if args.tarefaId == 2:
+    logger.debug("Start to evaluate Tarefa 2: %s", args.filename)
+    outmsg = parse_tarefa2(args.filename)
+
+if args.tarefaId == 3:
+    logger.debug("Start to evaluate Tarefa 3: %s", args.filename)
+    outmsg = parse_tarefa3(args.filename)
+    
 print("SUCCESS")
 for msg in outmsg.success:
     print("PASS : ", msg)
