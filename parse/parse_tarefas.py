@@ -10,7 +10,7 @@ from parse.classes import OutMsg
 
 logger = logging.getLogger(__name__)
 
-def check4Buttons(scr, outmsg):        
+def check4Buttons(scr, outmsg):
     # Check if screen 2 has at least 4 buttons
     ok = False
     numButtons=0
@@ -42,10 +42,10 @@ def checkNotifiers(scr, outmsg):
                     numNotifiers = numNotifiers + 1
         except:
             ok=False
-    if numNotifiers == 2:
+    if numNotifiers == 1:
         outmsg.success.append("Tela "+scr.UI.Properties.Name+" tem "+str(numNotifiers)+" notificador")
     else:
-        outmsg.fail.append("Tela "+scr.UI.Properties.Name+" tem "+str(numNotifiers)+" notificador. Deveria ter, no mínimo, 2")
+        outmsg.fail.append("Tela "+scr.UI.Properties.Name+" tem "+str(numNotifiers)+" notificador. Deveria ter 1")
         
 def check2Sounds(scr, outmsg):
     # Check if screen 2 has at least 2 sounds
@@ -160,6 +160,18 @@ def parse_tarefa2(filename):
    
     return outmsg
 
+# Recursively count compType elements, e.g., Button
+# Works also for elements inside Arrangements (that is, inside a list of components)
+def countComponents(compObj, compType):
+    total = 0  
+    for comp in compObj:
+        if hasattr(comp, "Components"):
+            total = total + countComponents(comp.Components, compType)
+        else:
+            if comp.Type == compType:
+                total = total + 1
+    return total
+
 def parse_tarefa3(filename):
     outmsg = OutMsg()
     mp = Project(filename)
@@ -178,21 +190,14 @@ def parse_tarefa3(filename):
         outmsg.success.append("Tem "+str(len(mp.screens))+" telas")
     else:
         outmsg.fail.append("Tem "+str(len(mp.screens))+" telas. Deveria ter 5 ou mais")
-
-    # Check if screen 1 has at least 2 buttons
+     
+    # Check if screen 1 has at least 2 buttons anywhere in the screen
     # INFO: Screen1 is always the first screen
-    ok = False
-    numButtons=0
-    if type(mp.Screen1.UI.Properties.Components) is list:
-        complist = mp.Screen1.UI.Properties.Components
-        for arrangement in complist:
-            for comp in arrangement.Components:
-                if comp.Type == "Button":
-                    numButtons = numButtons + 1
+    numButtons=countComponents(mp.Screen1.UI.Properties.Components, "Button")
     if numButtons>=2:
         outmsg.success.append("Tela 1 tem "+str(numButtons)+" botões")
     else:
-        outmsg.fail.append("Tela 1 tem "+str(numButtons)+" botão. Deveria ter, no mínimo, 2")
+        outmsg.fail.append("Tela 1 tem "+str(numButtons)+" botão. Deveria ter, no mínimo, 2")    
 
     #Check if audio file is incorporated in the .aia
     numAudioFiles=0
