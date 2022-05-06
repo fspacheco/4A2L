@@ -172,6 +172,23 @@ def countComponents(compObj, compType):
                 total = total + 1
     return total
 
+# Recursively check if Buttons have associated Image
+def checkButtonImage(compObj, scrName, outmsg):
+    total = 0  
+    for comp in compObj:
+        if hasattr(comp, "Components"):
+            checkButtonImage(compObj=comp.Components, scrName=scrName, outmsg=outmsg)
+        else:
+            if comp.Type == "Button":
+                if hasattr(comp, "Image") and comp.Image != None:
+                    outmsg.success.append(scrName+" Botão "+comp.Name+" tem imagem associada")
+                else:
+                    outmsg.fail.append(scrName+" Botão "+comp.Name+" não tem imagem associada")
+
+def checkScreenButtonImage(scr, outmsg):
+    print("#DBG ", scr.UI.Properties.Name)
+    checkButtonImage(compObj=scr.UI.Properties.Components, scrName=scr.UI.Properties.Name, outmsg=outmsg)    
+
 def parse_tarefa3(filename):
     outmsg = OutMsg()
     mp = Project(filename)
@@ -197,8 +214,8 @@ def parse_tarefa3(filename):
     if numButtons>=2:
         outmsg.success.append("Tela 1 tem "+str(numButtons)+" botões")
     else:
-        outmsg.fail.append("Tela 1 tem "+str(numButtons)+" botão. Deveria ter, no mínimo, 2")    
-
+        outmsg.fail.append("Tela 1 tem "+str(numButtons)+" botão. Deveria ter, no mínimo, 2") 
+        
     #Check if audio file is incorporated in the .aia
     numAudioFiles=0
     for audio in mp.audio:
@@ -257,6 +274,7 @@ def parse_tarefa3(filename):
         check4Buttons(scr, outmsg)
         checkNotifiers(scr, outmsg)
         check2Sounds(scr, outmsg)
+        checkScreenButtonImage(scr, outmsg)
           
     return outmsg
 
