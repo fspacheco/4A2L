@@ -186,7 +186,6 @@ def checkButtonImage(compObj, scrName, outmsg):
                     outmsg.fail.append(scrName+" Botão "+comp.Name+" não tem imagem associada")
 
 def checkScreenButtonImage(scr, outmsg):
-    print("#DBG ", scr.UI.Properties.Name)
     checkButtonImage(compObj=scr.UI.Properties.Components, scrName=scr.UI.Properties.Name, outmsg=outmsg)    
 
 def parse_tarefa3(filename):

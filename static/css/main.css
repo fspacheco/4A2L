@@ -32,8 +32,16 @@ form {
     margin-top: 20px;
 }
 
-#content, .success, .fail {
+#content, .success, .fail, .validation_code{
     margin: 0 auto;
+    padding: 20px;
+    width: 400px;
+    background-color: white;
+}
+
+.validation_code{
+    margin-top: 20px;
+    margin-bottom: 20px;
     padding: 20px;
     width: 400px;
     background-color: white;
@@ -56,8 +64,16 @@ footer {
     font-size: 75%;
     width: 50%;
     display: block;
+    margin-top: 100px;
     margin-left: auto;
     margin-right: auto;
     background-color: yellow;
+    background-image: url('../banner_footer.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
     text-align: center;
+}
+
+footer p {
+    width: 90%;  
 }
