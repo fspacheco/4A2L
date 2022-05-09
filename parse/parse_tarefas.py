@@ -174,7 +174,6 @@ def countComponents(compObj, compType):
 
 # Recursively check if Buttons have associated Image
 def checkButtonImage(compObj, scrName, outmsg):
-    total = 0  
     for comp in compObj:
         if hasattr(comp, "Components"):
             checkButtonImage(compObj=comp.Components, scrName=scrName, outmsg=outmsg)
@@ -184,6 +183,18 @@ def checkButtonImage(compObj, scrName, outmsg):
                     outmsg.success.append(scrName+" Botão "+comp.Name+" tem imagem associada")
                 else:
                     outmsg.fail.append(scrName+" Botão "+comp.Name+" não tem imagem associada")
+
+# Recursively count number of Buttons with associated Image
+def countButtonImage(compObj):
+    total = 0  
+    for comp in compObj:
+        if hasattr(comp, "Components"):
+            total = total + countButtonImage(compObj=comp.Components)
+        else:
+            if comp.Type == "Button":
+                if hasattr(comp, "Image") and comp.Image != None:
+                    total = total +1
+    return total
 
 def checkScreenButtonImage(scr, outmsg):
     checkButtonImage(compObj=scr.UI.Properties.Components, scrName=scr.UI.Properties.Name, outmsg=outmsg)    
@@ -273,7 +284,14 @@ def parse_tarefa3(filename):
         check4Buttons(scr, outmsg)
         checkNotifiers(scr, outmsg)
         check2Sounds(scr, outmsg)
-        checkScreenButtonImage(scr, outmsg)
+        numButtonsWithImage = countButtonImage(scr.UI.Properties.Components)
+        if numButtonsWithImage >= 4:
+            outmsg.success.append("Tela "+scr.UI.Properties.Name + " tem "+str(numButtonsWithImage)+" botões com imagens associadas")
+        elif numButtonsWithImage ==0:
+            outmsg.fail.append("Tela "+scr.UI.Properties.Name + " não tem nenhum botão com imagem associada. Deveria ter, no mínimo, 4")
+        else:
+            outmsg.fail.append("Tela "+scr.UI.Properties.Name + " tem "+str(numButtonsWithImage)+" botões com imagens associadas. Deveria ter, no mínimo, 4")
+            
           
     return outmsg
 
