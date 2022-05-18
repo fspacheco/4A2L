@@ -40,8 +40,12 @@ if args.tarefaId == 2:
 
 if args.tarefaId == 3:
     logger.debug("Start to evaluate Tarefa 3: %s", args.filename)
-    outmsg = parse_tarefa3(args.filename)
-    
+    outmsg = parse_tarefa3(args.filename)    
+
+if args.tarefaId == 4:
+    logger.debug("Start to evaluate Tarefa 4: %s", args.filename)
+    outmsg = parse_tarefa4(args.filename)
+
 print("SUCCESS")
 for msg in outmsg.success:
     print("PASS : ", msg)

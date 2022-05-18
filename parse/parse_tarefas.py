@@ -215,6 +215,8 @@ def parse_tarefa3(filename):
     # Check number of screens
     if len(mp.screens) >= 5:
         outmsg.success.append("Tem "+str(len(mp.screens))+" telas")
+    elif len(mp.screens) == 1:
+        outmsg.fail.append("Tem "+str(len(mp.screens))+" tela. Deveria ter 5 ou mais")
     else:
         outmsg.fail.append("Tem "+str(len(mp.screens))+" telas. Deveria ter 5 ou mais")
      
@@ -294,6 +296,96 @@ def parse_tarefa3(filename):
             
           
     return outmsg
+
+def parse_tarefa4(filename):
+    outmsg = OutMsg()
+    mp = Project(filename)
+    logger.info("Tarefa 4: avaliando arquivo %s", filename)
+
+    # Check if app has an icon
+    # INFO: If present, the icon is at Screen1
+    try:
+        if mp.Screen1.UI.Properties.Icon:
+            outmsg.success.append("App tem um ícone")
+    except:
+        outmsg.fail.append("App não tem um ícone")
+
+    # Check number of screens
+    if len(mp.screens) == 2:
+        outmsg.success.append("Tem "+str(len(mp.screens))+" telas")
+    elif len(mp.screens) == 1:
+        outmsg.fail.append("Tem "+str(len(mp.screens))+" tela. Deveria ter 2")
+    else:
+        outmsg.fail.append("Tem "+str(len(mp.screens))+" telas. Deveria ter 2")
+
+     
+    # Check if screen 1 has at least 2 buttons anywhere in the screen
+    # INFO: Screen1 is always the first screen
+    numButtons=countComponents(mp.Screen1.UI.Properties.Components, "Button")
+    if numButtons>=2:
+        outmsg.success.append("Tela 1 tem "+str(numButtons)+" botões")
+    else:
+        outmsg.fail.append("Tela 1 tem "+str(numButtons)+" botão. Deveria ter, no mínimo, 2") 
+        
+    # Check if Screen1 has 2 buttons with click
+    ok = False
+    numButtons = 0
+    for block in mp.Screen1.Code.blocks:
+        try:
+            if (block.component_type == "Button" and block.event_name == "Click"):
+                numButtons = numButtons + 1
+        except AttributeError:
+            ok = False
+    if numButtons >= 2:
+                outmsg.success.append("Os "+str(numButtons)+" botões da Tela 1 tem evento clique")
+    else:
+        outmsg.fail.append("Tela 1 não tem 2 botões com evento clique")
+
+    # Check if Screen1 / Button has action to open another screen
+    ok = False
+    for block in mp.Screen1.Code.blocks:
+        try:
+            if (block.component_type == "Button" and block.event_name == "Click"):
+                if block.statements[0].child.type == "controls_openAnotherScreen":
+                    outmsg.success.append("Tela 1 tem um botão que abre uma outra janela")
+                    ok=True
+                    break
+        except AttributeError:
+            ok = False
+    if ok == False:
+        outmsg.fail.append("Tela 1 não tem um botão que abre uma outra tela")
+
+    # Check if Screen1 / Button has action to exit app
+    ok = False
+    for block in mp.Screen1.Code.blocks:
+        try:
+            if (block.component_type == "Button" and block.event_name == "Click"):
+                if block.statements[0].child.type == "controls_closeApplication":
+                    outmsg.success.append("Tela 1 tem um botão que fecha o aplicativo")
+                    ok=True
+                    break
+        except AttributeError:
+            ok = False
+    if ok == False:
+        outmsg.fail.append("Tela 1 não tem um botão que fecha o aplicativo")        
+    
+    return outmsg
+
+'''    #Check for screens
+    for scr in mp.screens:
+        if scr.UI.Properties.Name == "Screen1":
+            continue
+        check4Buttons(scr, outmsg)
+        checkNotifiers(scr, outmsg)
+        check2Sounds(scr, outmsg)
+        numButtonsWithImage = countButtonImage(scr.UI.Properties.Components)
+        if numButtonsWithImage >= 4:
+            outmsg.success.append("Tela "+scr.UI.Properties.Name + " tem "+str(numButtonsWithImage)+" botões com imagens associadas")
+        elif numButtonsWithImage ==0:
+            outmsg.fail.append("Tela "+scr.UI.Properties.Name + " não tem nenhum botão com imagem associada. Deveria ter, no mínimo, 4")
+        else:
+            outmsg.fail.append("Tela "+scr.UI.Properties.Name + " tem "+str(numButtonsWithImage)+" botões com imagens associadas. Deveria ter, no mínimo, 4")
+'''            
 
 """   
 Arquivo exemplo Tarefa2

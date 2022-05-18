@@ -31,7 +31,7 @@ dictConfig({
 })
     
 app = Flask(__name__)
-app.config['MAX_CONTENT_LENGTH'] = 10 * 1000 * 1024
+app.config['MAX_CONTENT_LENGTH'] = 70 * 1000 * 1024
 app.config['UPLOAD_EXTENSIONS'] = ['.aia']
 app.config['UPLOAD_PATH'] = 'uploads'
 
@@ -78,6 +78,8 @@ def parse_aia_file(filename, task_id=2):
         outmsg = parse_tarefa2(filename)
     elif task_id == 3:
         outmsg = parse_tarefa3(filename)
+    elif task_id == 4:
+        outmsg = parse_tarefa4(filename)
     else:
         outmsg.fail.append(':construction:    Não sei avaliar ainda')
     return outmsg
