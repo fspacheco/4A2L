@@ -61,7 +61,7 @@ def check2Sounds(scr, outmsg):
 def parse_tarefa2(filename):
     outmsg = OutMsg()
     #TODO: read validation_code from a file
-    outmsg.validation_code = '112233'
+    outmsg.validation_code = '310846'
     mp = Project(filename)
     logger.info("Tarefa 2: avaliando arquivo %s", filename)
 
@@ -201,6 +201,8 @@ def checkScreenButtonImage(scr, outmsg):
 
 def parse_tarefa3(filename):
     outmsg = OutMsg()
+    #TODO: read validation_code from a file
+    outmsg.validation_code = '110638'
     mp = Project(filename)
     logger.info("Tarefa 3: avaliando arquivo %s", filename)
 
@@ -299,6 +301,8 @@ def parse_tarefa3(filename):
 
 def parse_tarefa4(filename):
     outmsg = OutMsg()
+    #TODO: read validation_code from a file
+    outmsg.validation_code = '150109'
     mp = Project(filename)
     logger.info("Tarefa 4: avaliando arquivo %s", filename)
 
