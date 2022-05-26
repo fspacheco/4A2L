@@ -142,19 +142,22 @@ def parse_tarefa2(filename):
             ok = True
     if ok == False:
         outmsg.fail.append("App tem uma legenda (label)")
-
+        
     # Check if sound has method play at Screen1
     ok = False
     for block in mp.Screen1.Code.blocks:
         if block.type == "component_event":
-            for statement in block.statements:
-                try:
-                    if statement.child.mutation.component_type == "Sound" and statement.child.mutation.method_name == "Play":
-                        outmsg.success.append("Script tem um som com método play")
-                        ok = True
-                        break
-                except AttributeError:
-                    ok = False
+            try:
+                for statement in block.statements:
+                    try:
+                        if statement.child.mutation.component_type == "Sound" and statement.child.mutation.method_name == "Play":
+                            outmsg.success.append("Script tem um som com método play")
+                            ok = True
+                            break
+                    except AttributeError:
+                        ok = False
+            except AttributeError:
+                ok = False
     if ok == False:
         outmsg.fail.append("Script não tem um som com método play")
    
