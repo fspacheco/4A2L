@@ -53,10 +53,10 @@ def check2Sounds(scr, outmsg):
     for comp in scr.UI.Properties.Components:
         if comp.Type == "Sound":
             numAudioFiles = numAudioFiles + 1
-    if numAudioFiles == 2:
-        outmsg.success.append("Tela "+scr.UI.Properties.Name+" tem 2 objetos de áudio (som)")
+    if numAudioFiles >= 2:
+        outmsg.success.append("Tela "+scr.UI.Properties.Name+" tem "+str(numAudioFiles)+" objetos de áudio (som)")
     else:
-        outmsg.fail.append("Tela "+scr.UI.Properties.Name+" tem "+str(numAudioFiles)+" objetos de áudio (som). Deveria ter 2")
+        outmsg.fail.append("Tela "+scr.UI.Properties.Name+" tem "+str(numAudioFiles)+" objetos de áudio (som). Deveria ter 2 ou mais")
         
 def parse_tarefa2(filename):
     outmsg = OutMsg()
