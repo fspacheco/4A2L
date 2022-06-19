@@ -83,3 +83,8 @@ def parse_aia_file(filename, task_id=2):
     else:
         outmsg.fail.append(':construction:    Não sei avaliar ainda')
     return outmsg
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
+

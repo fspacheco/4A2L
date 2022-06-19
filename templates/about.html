@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  <title>Sobre</title>
+{% endblock %}
+
+{% block body %}
+  <h1>Sobre</h1>
+  <div id="content">
+  <p>Esta avaliação automática foi escrita usando a linguagem Python e o framework Flask.</p>
+  <p>Um arquivo .aia, que é o código-fonte de um aplicativo desenvolvido com o <a href="https://appinventor.mit.edu/">MIT App Inventor</a>, nada mais é que um zip com as imagens, sons e mais duas representações: as telas em json e a programação dos blocos em xml. Para cada uma das tarefas do curso foram definidos requisitos, como, por exemplo, "o aplicativo deve ter um ícone" ou "um botão está associado a um evento reproduzir áudio".</p>
+  <p>Primeiro, fazemos a leitura do arquivo .aia usando o excelente <a href="https://pypi.org/project/parseaia/">módulo parseaia</a>. Depois, são feitas as verificações e, por fim, o resultado é apresentado na tela. Quando o estudante consegue passar com sucesso por todos os testes, é liberada uma senha para avançar no curso.</p>
+  <p>O serviço está hospedado na plataforma Heroku.</p>
+  <p>Se você quiser fazer um teste, baixe o arquivo <a href="static/App_Oficina2_1_sem_icone.aia">AppOficina2</a> e depois faça o upload na página principal da avaliação. Aviso: falta um ícone neste aplicativo. Se você quiser corrigir, entre no site do <a href="http://ai2.appinventor.mit.edu/">App Inventor</a>.</p>
+  <p>Se você tiver qualquer dúvida ou comentário, basta entrar em contato com o prof. Fernando Pacheco, no email fspacheco (em) ifsc.edu.br.
+  </div>
+{% endblock %}
